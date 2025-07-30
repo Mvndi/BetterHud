@@ -12,8 +12,10 @@ import kr.toxicity.hud.api.popup.PopupIteratorGroup
 import kr.toxicity.hud.api.popup.PopupUpdater
 import kr.toxicity.hud.manager.*
 import kr.toxicity.hud.util.*
+import net.jodah.expiringmap.ExpiringMap
 import net.kyori.adventure.bossbar.BossBar
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import kotlin.collections.forEach
 
 abstract class HudPlayerImpl : HudPlayer {
@@ -31,6 +33,9 @@ abstract class HudPlayerImpl : HudPlayer {
     private val pointers: MutableSet<PointedLocation> = OverridableSet(keyMapper = {
         it.name
     })
+    private val componentCache = ExpiringMap.builder()
+        .expiration(30, TimeUnit.SECONDS)
+        .build<Int, Long>()
 
     private val task = HudPlayerTask {
         val speed = ConfigManagerImpl.tickSpeed
@@ -125,7 +130,7 @@ abstract class HudPlayerImpl : HudPlayer {
                 } else compList += comp
             }
         }
-        if (compList.isNotEmpty() || additionalComp != null) {
+        val component = if (compList.isNotEmpty() || additionalComp != null) {
             additionalComp?.let {
                 compList += (-it.width / 2).toSpaceComponent() + it
             }
@@ -135,9 +140,20 @@ abstract class HudPlayerImpl : HudPlayer {
                 comp += (-it.width).toSpaceComponent()
             }
             last = comp.finalizeFont()
+            comp.component().build()
+        } else EMPTY_COMPONENT
 
-            VOLATILE_CODE.showBossBar(this, color ?: ShaderManagerImpl.barColor, comp.component.build().compact())
-        } else VOLATILE_CODE.showBossBar(this, color ?: ShaderManagerImpl.barColor, EMPTY_COMPONENT)
+
+        val hashCode = component.hashCode()
+        val last = componentCache.getOrDefault(hashCode, -1L)
+        val now = System.currentTimeMillis()
+        if (last != -1L && now - last < 1000) {
+            return
+        }
+
+        componentCache[hashCode] = System.currentTimeMillis()
+        val compact = component.compact()
+        VOLATILE_CODE.showBossBar(this, color ?: ShaderManagerImpl.barColor, compact)
     }
 
     override fun reload() {
@@ -157,6 +173,7 @@ abstract class HudPlayerImpl : HudPlayer {
         hudNames.toNonDefaultHud().forEach { it.add(this) }
         popupNames.toNonDefaultPopup().forEach { it.add(this) }
         compassNames.toNonDefaultCompass().forEach { it.add(this) }
+        componentCache.clear()
     }
 
     final override fun cancel() {
@@ -167,6 +184,7 @@ abstract class HudPlayerImpl : HudPlayer {
         cancelTick()
         autoSave.cancel()
         locationProvide.cancel()
+        componentCache.clear()
     }
 
     override fun type(): SenderType = SenderType.PLAYER
