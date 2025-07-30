@@ -81,9 +81,8 @@ class NMSImpl : NMS {
         private val getConnection: (ServerCommonPacketListenerImpl) -> Connection = createAdaptedFieldGetter { it.connection }
 
         fun createBossBar(byteBuf: RegistryFriendlyByteBuf): ClientboundBossEventPacket = ClientboundBossEventPacket.STREAM_CODEC.decode(byteBuf)
-
-        private fun toAdventure(component: net.minecraft.network.chat.Component) = GsonComponentSerializer.gson().deserialize(CraftChatMessage.toJSON(component))
-        private fun fromAdventure(component: Component) = CraftChatMessage.fromJSON(GsonComponentSerializer.gson().serialize(component))
+        private fun toAdventure(component: net.minecraft.network.chat.Component) = io.papermc.paper.adventure.PaperAdventure.asAdventure(component)
+        private fun fromAdventure(component: Component) = io.papermc.paper.adventure.PaperAdventure.asVanilla(component)
         private fun getColor(color: BossBar.Color) =  when (color) {
             BossBar.Color.PINK -> BossEvent.BossBarColor.PINK
             BossBar.Color.BLUE -> BossEvent.BossBarColor.BLUE
