@@ -1,10 +1,12 @@
 package kr.toxicity.hud.bootstrap.bukkit.manager
 
 import kr.toxicity.hud.api.update.UpdateEvent
+import kr.toxicity.hud.bootstrap.bukkit.compatibility.craftengine.CraftEngineCompatibility
 import kr.toxicity.hud.bootstrap.bukkit.compatibility.mmocore.MMOCoreCompatibility
 import kr.toxicity.hud.bootstrap.bukkit.compatibility.mmoitems.MMOItemsCompatibility
 import kr.toxicity.hud.bootstrap.bukkit.compatibility.mythiclib.MythicLibCompatibility
 import kr.toxicity.hud.bootstrap.bukkit.compatibility.mythicmobs.MythicMobsCompatibility
+import kr.toxicity.hud.bootstrap.bukkit.compatibility.nexo.NexoCompatibility
 import kr.toxicity.hud.bootstrap.bukkit.compatibility.parties.PartiesCompatibility
 import kr.toxicity.hud.bootstrap.bukkit.compatibility.skript.SkriptCompatibility
 import kr.toxicity.hud.bootstrap.bukkit.compatibility.vault.VaultCompatibility
@@ -40,6 +42,12 @@ object CompatibilityManager {
         },
         "Parties" to {
             PartiesCompatibility()
+        },
+        "CraftEngine" to {
+            CraftEngineCompatibility()
+        },
+        "Nexo" to {
+            NexoCompatibility()
         }
     )
 

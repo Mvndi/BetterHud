@@ -16,7 +16,6 @@ import kr.toxicity.hud.api.bukkit.nms.NMSVersion
 import kr.toxicity.hud.api.manager.ConfigManager
 import kr.toxicity.hud.api.placeholder.HudPlaceholder
 import kr.toxicity.hud.api.player.HudPlayer
-import kr.toxicity.hud.api.plugin.ReloadFlagType
 import kr.toxicity.hud.api.scheduler.HudScheduler
 import kr.toxicity.hud.api.version.MinecraftVersion
 import kr.toxicity.hud.bedrock.FloodgateAdapter
@@ -30,7 +29,6 @@ import kr.toxicity.hud.bootstrap.bukkit.util.bukkitPlayer
 import kr.toxicity.hud.bootstrap.bukkit.util.call
 import kr.toxicity.hud.bootstrap.bukkit.util.registerListener
 import kr.toxicity.hud.manager.*
-import kr.toxicity.hud.pack.PackType
 import kr.toxicity.hud.pack.PackUploader
 import kr.toxicity.hud.placeholder.PlaceholderTask
 import kr.toxicity.hud.player.head.HttpSkinProvider
@@ -187,6 +185,7 @@ class BukkitBootstrapImpl : BukkitBootstrap, JavaPlugin() {
     override fun onLoad() {
         val pluginManager = Bukkit.getPluginManager()
         nms = when (minecraftVersion) {
+            //MinecraftVersion.V1_21_9 -> kr.toxicity.hud.nms.v1_21_R6.NMSImpl()
             MinecraftVersion.V1_21_6, MinecraftVersion.V1_21_7, MinecraftVersion.V1_21_8 -> kr.toxicity.hud.nms.v1_21_R5.NMSImpl()
             MinecraftVersion.V1_21_5 -> kr.toxicity.hud.nms.v1_21_R4.NMSImpl()
             MinecraftVersion.V1_21_4 -> kr.toxicity.hud.nms.v1_21_R3.NMSImpl()
@@ -263,10 +262,8 @@ class BukkitBootstrapImpl : BukkitBootstrap, JavaPlugin() {
             @EventHandler
             fun ServerLoadEvent.load() {
                 debug(ConfigManager.DebugLevel.MANAGER,"Initialized: $type")
-                if (!skipInitialReload || ConfigManagerImpl.packType != PackType.NONE) {
-                    scheduler.asyncTask {
-                        core.reload(ReloadFlagType.PREVENT_GENERATE_RESOURCE_PACK)
-                    }
+                if (!skipInitialReload) {
+                    core.reload()
                 }
                 log.info(
                     "Minecraft version: $minecraftVersion, NMS version: ${nms.version}",
