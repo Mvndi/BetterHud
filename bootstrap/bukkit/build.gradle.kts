@@ -39,7 +39,7 @@ dependencies {
     compileOnly(libs.adventurePlatformBukkit)
     compileOnly(shade(rootProject.fileTree("shaded"))!!)
 
-    compileOnly("io.lumine:Mythic-Dist:5.9.5")
+    compileOnly("io.lumine:Mythic-Dist:5.10.1")
     compileOnly("io.lumine:MythicLib-dist:1.7.1-SNAPSHOT")
     compileOnly("net.Indyuce:MMOCore-API:1.13.1-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.10.1-SNAPSHOT")
@@ -55,11 +55,11 @@ dependencies {
         exclude("it.unimi.dsi")
     }
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
-    compileOnly("com.github.SkriptLang:Skript:2.12.2")
-    compileOnly("net.skinsrestorer:skinsrestorer-api:15.7.10")
+    compileOnly("com.github.SkriptLang:Skript:2.13.0-pre1")
+    compileOnly("net.skinsrestorer:skinsrestorer-api:15.8.2")
     compileOnly("com.alessiodp.parties:parties-bukkit:3.2.16")
-    compileOnly("net.momirealms:craft-engine-core:0.0.63")
-    compileOnly("net.momirealms:craft-engine-bukkit:0.0.63")
+    compileOnly("net.momirealms:craft-engine-core:0.0.64")
+    compileOnly("net.momirealms:craft-engine-bukkit:0.0.64")
     compileOnly("com.nexomc:nexo:1.11.0-dev")
 }
 

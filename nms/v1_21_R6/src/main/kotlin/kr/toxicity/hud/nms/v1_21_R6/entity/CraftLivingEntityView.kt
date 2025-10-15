@@ -15,7 +15,7 @@ class CraftLivingEntityView(
     val source: CraftLivingEntity
 ) : CraftLivingEntity(Bukkit.getServer() as CraftServer, source.unsafeHandle as LivingEntity) {
 
-    override fun getHandle(): LivingEntity? {
+    override fun getHandle(): LivingEntity {
         return source.unsafeHandle as LivingEntity
     }
 
@@ -59,11 +59,7 @@ class CraftLivingEntityView(
         return source.isPermissionSet(perm)
     }
 
-    override fun recalculatePermissions() {
-        source.recalculatePermissions()
-    }
-
-    override fun getEquipment(): EntityEquipment? {
+    override fun getEquipment(): EntityEquipment {
         return source.equipment
     }
 }
